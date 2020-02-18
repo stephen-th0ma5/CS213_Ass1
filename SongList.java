@@ -109,6 +109,10 @@ class SongList {
     }
   }
 
+  public Song getHead() {
+    return this.head;
+  }
+
   public String toString() {
     Song ptr = head;
     String songListString = "";

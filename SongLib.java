@@ -6,12 +6,12 @@ public class SongLib {
 
   public static void main(String args[]) {
 
-    songList = readExistingSongLibrary();
+    readExistingSongLibrary();
 
-    Song song4 = new Song("Song 4", "Artist 4");
-    songList.addSong(song4);
+    //Song song4 = new Song("Song 6", "Artist 4");
+    //songList.addSong(song4);
 
-    Song song1 = new Song("Song 1", "Artist 1");
+    /*Song song1 = new Song("Song 1", "Artist 1");
     songList.addSong(song1);
 
     Song song5 = new Song("Song 1", "Artist 3");
@@ -24,34 +24,48 @@ public class SongLib {
     songList.addSong(song2);
 
     Song song6 = new Song("Song 1", "Artist 2");
-    songList.addSong(song6);
+    songList.addSong(song6);*/
 
-    Song editedSong2 = new Song("Edited Song 2", "Edited Artist 2");
-    songList.editSong(song2, editedSong2);
+    //addSongListToLibrary();
 
     System.out.println(songList);
   }
 
   private static void addSongListToLibrary() {
 
+    try{
+      FileWriter writer = new FileWriter("./songLibrary.csv");
+      Song song = songList.getHead();
+      while(song != null){
+        writer.append(song.getName() + ", " + song.getArtist() + ", " + song.getAlbum() + ", " + song.getYear() + "\n");
+        song = song.nextSong;
+      }
+      writer.flush();
+      writer.close();
+    } catch(IOException e){
+      System.out.println(e);
+    }
   }
 
-  private static SongList readExistingSongLibrary() {
+  private static void readExistingSongLibrary() {
     try{
 
-      String fileName = "./songLibrary.json";
+      String fileName = "./songLibrary.csv";
       File file = new File(fileName);
 
       BufferedReader reader = new BufferedReader(new FileReader(file));
       String line;
+      songList = new SongList();
+
       while((line = reader.readLine()) != null){
-        System.out.println(line);
+        String[] row = line.split(",");
+        Song song = new Song(row[0], row[1], Integer.parseInt(row[3].trim()), row[2]);
+        songList.addSong(song);
       }
 
       reader.close();
     } catch(IOException e){
       System.out.println(e);
     }
-    return new SongList();
   }
 }
